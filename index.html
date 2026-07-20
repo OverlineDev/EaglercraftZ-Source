@@ -1,106 +1,32 @@
-<!doctype html>
-<html lang="en">
-<head>
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>EaglercraftZ</title>
-  <style>
-    html, body {
-      margin: 0;
-      width: 100%;
-      height: 100%;
-      overflow: hidden;
-      background: #000;
-    }
+<script>
+  const BASE = "/EaglercraftZ-Source/javascript/";
+  const relayId = Math.floor(Math.random() * 3);
 
-    #game_frame {
-      width: 100%;
-      height: 100%;
-    }
+  window.eaglercraftXOpts = {
+    demoMode: false,
+    container: "game_frame",
 
-    #fallback_msg {
-      position: fixed;
-      inset: 0;
-      display: none;
-      align-items: center;
-      justify-content: center;
-      color: #fff;
-      background: #111;
-      font-family: system-ui, sans-serif;
-      text-align: center;
-      padding: 24px;
-      z-index: 9999;
-    }
-  </style>
-</head>
-<body>
-  <div id="game_frame"></div>
-  <div id="fallback_msg">
-    Failed to load game files.<br />
-    Check that <code>./javascript/classes.js</code> and assets exist in this branch.
-  </div>
+    // Force absolute paths on GitHub Pages/custom domain
+    assetsURI: BASE + "assets.epk",
+    localesURI: BASE + "lang/",
 
-  <script>
-    (function () {
-      const relayId = Math.floor(Math.random() * 3);
-
-      window.eaglercraftXOpts = {
-        demoMode: false,
-        container: "game_frame",
-        assetsURI: "./javascript/assets.epk",
-        localesURI: "./javascript/lang/",
-        worldsDB: "worlds",
-        resourcePacksDB: "resourcePacks",
-
-        // IMPORTANT FOR GITHUB PAGES:
-        // Do not use ws://localhost here in production.
-        // Keep empty, or add your public WSS server(s).
-        servers: [
-          // { addr: "wss://your-server.example.com/", name: "Main Server" }
-        ],
-
-        relays: [
-          { addr: "wss://relay.deev.is/", comment: "lax1dude relay #1", primary: relayId === 0 },
-          { addr: "wss://relay.lax1dude.net/", comment: "lax1dude relay #2", primary: relayId === 1 },
-          { addr: "wss://relay.shhnowisnottheti.me/", comment: "ayunami relay #1", primary: relayId === 2 }
-        ],
-
-        // More stable for public deploys
-        crashOnUncaughtExceptions: false,
-        deobfStackTraces: false,
-        allowBootMenu: true,
-        showBootMenuOnLaunch: true
-      };
-
-      // Optional: ?server=wss://example.com/
-      const q = window.location.search;
-      if (typeof q === "string" && q.startsWith("?") && typeof URLSearchParams !== "undefined") {
-        const params = new URLSearchParams(q);
-        const s = params.get("server");
-        if (s) window.eaglercraftXOpts.joinServer = s;
-      }
-    })();
-  </script>
-
-  <script
-    src="./javascript/classes.js"
-    onerror="document.getElementById('fallback_msg').style.display='flex'; console.error('Failed to load ./javascript/classes.js');">
-  </script>
-
-  <script>
-    window.addEventListener("load", function () {
-      try {
-        if (typeof main === "function") {
-          main();
-        } else {
-          document.getElementById("fallback_msg").style.display = "flex";
-          console.error("main() not found after loading classes.js");
-        }
-      } catch (err) {
-        document.getElementById("fallback_msg").style.display = "flex";
-        console.error("Game startup failed:", err);
-      }
-    });
-  </script>
-</body>
-</html>
+    worldsDB: "worlds",
+    resourcePacksDB: "resourcePacks",
+    servers: [],
+    relays: [
+      { addr: "wss://relay.deev.is/", comment: "lax1dude relay #1", primary: relayId === 0 },
+      { addr: "wss://relay.lax1dude.net/", comment: "lax1dude relay #2", primary: relayId === 1 },
+      { addr: "wss://relay.shhnowisnottheti.me/", comment: "ayunami relay #1", primary: relayId === 2 }
+    ],
+    crashOnUncaughtExceptions: false,
+    deobfStackTraces: false,
+    allowBootMenu: true,
+    showBootMenuOnLaunch: true
+  };
+</script>
+<script src="/EaglercraftZ-Source/javascript/classes.js"></script>
+<script>
+  window.addEventListener("load", () => {
+    if (typeof main === "function") main();
+  });
+</script>
