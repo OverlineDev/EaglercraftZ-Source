@@ -23,27 +23,40 @@
   <div id="game_frame"></div>
 
   <script>
+    // Pick one relay as primary, but keep all relays as fallbacks
     const relayId = Math.floor(Math.random() * 3);
 
     window.eaglercraftXOpts = {
       demoMode: false,
       container: "game_frame",
+
+      // Relative paths are best for GitHub Pages project sites
       assetsURI: "./assets.epk",
       localesURI: "./lang/",
+
       worldsDB: "worlds",
       resourcePacksDB: "resourcePacks",
+
+      // IMPORTANT:
+      // GitHub Pages is served over HTTPS, so use wss:// only.
+      // Remove/disable local ws:// server in production.
       servers: [
-        { addr: "ws://localhost:8081/", name: "Local test server" }
+        // Replace with your real public WSS backend if you have one:
+        // { addr: "wss://your-server.example.com/", name: "Main Server" }
       ],
+
       relays: [
         { addr: "wss://relay.deev.is/", comment: "lax1dude relay #1", primary: relayId === 0 },
         { addr: "wss://relay.lax1dude.net/", comment: "lax1dude relay #2", primary: relayId === 1 },
         { addr: "wss://relay.shhnowisnottheti.me/", comment: "ayunami relay #1", primary: relayId === 2 }
       ],
-      crashOnUncaughtExceptions: true,
-      deobfStackTraces: true,
+
+      // More resilient for production hosting
+      crashOnUncaughtExceptions: false,
+      deobfStackTraces: false,
+
       allowBootMenu: true,
-      showBootMenuOnLaunch: false
+      showBootMenuOnLaunch: true
     };
   </script>
 
